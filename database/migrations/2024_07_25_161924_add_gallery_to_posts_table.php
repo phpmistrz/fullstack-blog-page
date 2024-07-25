@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('completed_games', function (Blueprint $table) {
-            $table->id();
-            $table->string('title')->unique();
-            $table->string('slug');
-            $table->text('thumbnail');
-            $table->date('integer');
-            $table->timestamps();
+        Schema::table('posts', function (Blueprint $table) {
+            $table->json('gallery')->after('thumbnail')->nullable();
         });
     }
 
@@ -26,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('completed_games');
+        Schema::table('posts', function (Blueprint $table) {
+            $table->dropColumn('gallery');
+        });
     }
 };

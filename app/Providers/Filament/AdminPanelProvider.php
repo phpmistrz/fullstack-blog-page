@@ -32,9 +32,9 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->passwordReset()
-            ->unsavedChangesAlerts()
+            // ->unsavedChangesAlerts()
             ->sidebarCollapsibleOnDesktop()
-            ->favicon('/favicon.ico')
+            ->favicon('/favicon/favicon.ico')
             ->brandLogo('/assets/logo.webp')
             ->brandLogoHeight(fn () => auth()->check() ? '40px' : '100px')
             ->colors([

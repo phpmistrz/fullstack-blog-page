@@ -28,6 +28,7 @@ class CategoryResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('title')
+                
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('slug')
@@ -44,6 +45,7 @@ class CategoryResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
+              
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
                     ->searchable(),
