@@ -17,24 +17,13 @@ class TopGameResource extends Resource
 {
     protected static ?string $model = TopGame::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'Gry';
 
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('slug')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('thumbnail')
-                    ->required()
-                    ->columnSpanFull(),
-            ]);
+            ->schema( TopGame::getForm());
     }
 
     public static function table(Table $table): Table
@@ -67,12 +56,7 @@ class TopGameResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
+  
 
     public static function getPages(): array
     {
@@ -81,5 +65,22 @@ class TopGameResource extends Resource
             'create' => Pages\CreateTopGame::route('/create'),
             'edit' => Pages\EditTopGame::route('/{record}/edit'),
         ];
+    }
+
+    
+    public static function getNavigationLabel(): string
+    {
+        return ('Top Games');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return ('Top Games');
+    }
+
+    public static function getLabel(): ?string
+    {
+        return ('Top Game');
+
     }
 }

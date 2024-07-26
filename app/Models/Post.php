@@ -174,9 +174,7 @@ class Post extends Model
                         ->searchable()
                         ->required()
                         ->placeholder('Można wybrać kilka')
-                    // ->createOptionAction(Category::getForm())
-                    ,
-
+                        ->createOptionForm(Category::getForm()),
                     Select::make('tag_id')
                         ->label('Tag')
                         ->relationship('tags', 'title')
@@ -185,8 +183,7 @@ class Post extends Model
                         ->searchable()
                         ->required()
                         ->placeholder('Można wybrać kilka')
-                    // ->createOptionAction(Tag::getForm())
-                    ,
+                        ->createOptionForm(Tag::getForm()),
                     Select::make('movie_id')
                         ->label('Film')
                         ->relationship('movies', 'title')

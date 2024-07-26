@@ -54,10 +54,11 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()
                 ->label('Treści'),
                 NavigationGroup::make()
-                ->label('Gry'),
+                ->label('Gry')
+                ->icon('heroicon-o-bug-ant'),
                 NavigationGroup::make()
                 ->label('Kategorie i Tagi')
-                ->icon('heroicon-o-globe-alt'),
+                ,
             ])
             ->navigationItems([
                 NavigationItem::make('Strona Główna')

@@ -17,24 +17,14 @@ class TagResource extends Resource
 {
     protected static ?string $model = Tag::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
 
     protected static ?string $navigationGroup = 'Kategorie i Tagi';
 
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('slug')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('thumbnail')
-                    ->required()
-                    ->columnSpanFull(),
-            ]);
+            ->schema( Tag::getForm());
     }
 
     public static function table(Table $table): Table
@@ -67,12 +57,6 @@ class TagResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
 
     public static function getPages(): array
     {
@@ -81,5 +65,21 @@ class TagResource extends Resource
             'create' => Pages\CreateTag::route('/create'),
             'edit' => Pages\EditTag::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return ('Tagi');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return ('Tagi');
+    }
+
+    public static function getLabel(): ?string
+    {
+        return ('Tag');
+
     }
 }

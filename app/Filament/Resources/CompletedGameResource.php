@@ -17,26 +17,16 @@ class CompletedGameResource extends Resource
 {
     protected static ?string $model = CompletedGame::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
 
     protected static ?string $navigationGroup = 'Gry';
 
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('slug')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('thumbnail')
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\DatePicker::make('year')
-                    ->required(),
-            ]);
+            ->schema(
+               CompletedGame::getForm()
+            );
     }
 
     public static function table(Table $table): Table
@@ -72,12 +62,7 @@ class CompletedGameResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
+   
 
     public static function getPages(): array
     {
@@ -86,5 +71,21 @@ class CompletedGameResource extends Resource
             'create' => Pages\CreateCompletedGame::route('/create'),
             'edit' => Pages\EditCompletedGame::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return ('Ukończone Gry');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return ('Ukończone Gry');
+    }
+
+    public static function getLabel(): ?string
+    {
+        return ('Ukończona Gra');
+
     }
 }
