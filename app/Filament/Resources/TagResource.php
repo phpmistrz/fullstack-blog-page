@@ -2,16 +2,18 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\TagResource\Pages;
-use App\Filament\Resources\TagResource\RelationManagers;
 use App\Models\Tag;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\TagResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\TagResource\RelationManagers;
 
 class TagResource extends Resource
 {
@@ -24,31 +26,50 @@ class TagResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema( Tag::getForm());
+            ->schema(Tag::getForm());
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+            
+                ->defaultSort('posts_count','desc')
+                ->columns([
+                    ImageColumn::make('thumbnail')
+                        ->label('Miniaturka')
+                        ->circular(),
+                    TextColumn::make('title')
+                        ->label('Tytuł')
+                        ->sortable()
+                        ->searchable(),
+                    TextColumn::make('posts_count')
+                        ->label('Liczba postów')
+                        ->counts('posts')
+                        ->sortable(),
+    
+                    TextColumn::make('created_at')
+                        ->label('Data utworzenia')
+                        ->dateTime()
+                        ->sortable()
+                        ->formatStateUsing(function ($state) {
+                            return $state->format('d-m-Y');
+                        })
+                        ->toggleable(isToggledHiddenByDefault: true),
+                    TextColumn::make('updated_at')
+                        ->label('Data modyfikacji')
+                        ->dateTime()
+                        ->sortable()
+                        ->formatStateUsing(function ($state) {
+                            return $state->format('d-m-Y');
+                        })
+                        ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -80,6 +101,5 @@ class TagResource extends Resource
     public static function getLabel(): ?string
     {
         return ('Tag');
-
     }
 }

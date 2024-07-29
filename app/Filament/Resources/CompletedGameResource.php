@@ -2,16 +2,18 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CompletedGameResource\Pages;
-use App\Filament\Resources\CompletedGameResource\RelationManagers;
-use App\Models\CompletedGame;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Models\CompletedGame;
+use Filament\Resources\Resource;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\CompletedGameResource\Pages;
+use App\Filament\Resources\CompletedGameResource\RelationManagers;
 
 class CompletedGameResource extends Resource
 {
@@ -25,28 +27,57 @@ class CompletedGameResource extends Resource
     {
         return $form
             ->schema(
-               CompletedGame::getForm()
+                CompletedGame::getForm()
             );
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
-                Tables\Columns\TextColumn::make('title')
+                ImageColumn::make('thumbnail')
+                    ->label('Miniaturka')
+                    ->circular(),
+                TextColumn::make('title')
+                    ->label('Tytuł')
+                    ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('year')
-                    ->date()
+                TextColumn::make('posts_count')
+                    ->label('Liczba postów')
+                    ->counts('posts')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                ImageColumn::make('categories.thumbnail')
+                    ->label('Kategorie')
+                    ->circular()
+                    ->stacked()
+                    ->limit(3)
+                    ->limitedRemainingText(),
+                ImageColumn::make('tag.thumbnail')
+                    ->label('Tagi')
+                    ->circular()
+                    ->stacked()
+                    ->limit(3)
+                    ->limitedRemainingText(),
+                TextColumn::make('year')
+                    ->label('Rok Ukończenia')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('created_at')
+                    ->label('Data utworzenia')
                     ->dateTime()
                     ->sortable()
+                    ->formatStateUsing(function ($state) {
+                        return $state->format('d-m-Y');
+                    })
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')
+                    ->label('Data modyfikacji')
+                    ->dateTime()
+                    ->sortable()
+                    ->formatStateUsing(function ($state) {
+                        return $state->format('d-m-Y');
+                    })
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
@@ -54,6 +85,7 @@ class CompletedGameResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -62,7 +94,7 @@ class CompletedGameResource extends Resource
             ]);
     }
 
-   
+
 
     public static function getPages(): array
     {
@@ -86,6 +118,5 @@ class CompletedGameResource extends Resource
     public static function getLabel(): ?string
     {
         return ('Ukończona Gra');
-
     }
 }

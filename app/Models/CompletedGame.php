@@ -36,8 +36,8 @@ class CompletedGame extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        // 'year' => 'date',
         'year' => 'integer',
+       
     ];
 
     // RELATIONS
@@ -121,7 +121,6 @@ class CompletedGame extends Model
                         ->multiple()
                         ->preload()
                         ->searchable()
-                        ->required()
                         ->placeholder('Można wybrać kilka')
                         ->createOptionForm(Tag::getForm()),
                     Select::make('movie_id')

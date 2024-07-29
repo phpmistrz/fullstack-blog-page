@@ -140,7 +140,7 @@ class Post extends Model
 
                     FileUpload::make('gallery')
                         ->label('Galeria')
-                        ->required()
+                        
                         ->directory('images-post')
                         ->image()
                         ->optimize('webp')
@@ -149,8 +149,7 @@ class Post extends Model
                         ->reorderable()
                         ->appendFiles()
                         ->panelLayout('grid')
-                        ->minFiles(3)
-                        ->maxFiles(9)
+                        ->maxFiles(12)
                         ->imageEditor()
                         ->imageEditorAspectRatios([
                             null,
@@ -181,7 +180,6 @@ class Post extends Model
                         ->multiple()
                         ->preload()
                         ->searchable()
-                        ->required()
                         ->placeholder('Można wybrać kilka')
                         ->createOptionForm(Tag::getForm()),
                     Select::make('movie_id')
@@ -204,14 +202,16 @@ class Post extends Model
                         ->multiple()
                         ->preload()
                         ->searchable()
-                        ->placeholder('Można wybrać kilka'),
+                        ->placeholder('Można wybrać kilka')
+                        ->createOptionForm(CompletedGame::getForm()),
                     Select::make('top_game_id')
                         ->label('Top of the Top')
                         ->relationship('topGames', 'title')
                         ->multiple()
                         ->preload()
                         ->searchable()
-                        ->placeholder('Można wybrać kilka'),
+                        ->placeholder('Można wybrać kilka')
+                        ->createOptionForm(TopGame::getForm()),
                 ]),
 
             Step::make('Publikacja')
@@ -226,11 +226,4 @@ class Post extends Model
                 ])
         ];
     }
-
-
-
-
-    //             Forms\Components\DateTimePicker::make('published_at')
-    //                 ->required(),
-
 }

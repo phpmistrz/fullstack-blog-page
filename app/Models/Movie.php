@@ -82,12 +82,12 @@ class Movie extends Model
                 ->minLength(3)
                 ->maxLength(255),
 
-            TextInput::make('link')
-                ->label('Link')
-                ->url()
-                ->required()
-                ->columnSpanFull()
-                ,
+           TextInput::make('link')
+           ->label('Link')
+           ->url()
+           ->required()
+           ->columnSpanFull()
+           ,
                 
             FileUpload::make('thumbnail')
                 ->label('Miniaturka')
@@ -122,7 +122,6 @@ class Movie extends Model
                         ->multiple()
                         ->preload()
                         ->searchable()
-                        ->required()
                         ->placeholder('Można wybrać kilka')
                         ->createOptionForm(Tag::getForm()),
                     Select::make('completed_game_id')
@@ -131,14 +130,16 @@ class Movie extends Model
                         ->multiple()
                         ->preload()
                         ->searchable()
-                        ->placeholder('Można wybrać kilka'),
+                        ->placeholder('Można wybrać kilka')
+                        ->createOptionForm(CompletedGame::getForm()),
                     Select::make('top_game_id')
                         ->label('Topowe gry')
                         ->relationship('topGames', 'title')
                         ->multiple()
                         ->preload()
                         ->searchable()
-                        ->placeholder('Można wybrać kilka'),
+                        ->placeholder('Można wybrać kilka')
+                        ->createOptionForm(TopGame::getForm()),
                     Select::make('post_id')
                         ->label('Post')
                         ->relationship('posts', 'title')

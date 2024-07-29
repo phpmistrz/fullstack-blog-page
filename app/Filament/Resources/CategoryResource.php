@@ -2,16 +2,19 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryResource\Pages;
-use App\Filament\Resources\CategoryResource\RelationManagers;
-use App\Models\Category;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Category;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Illuminate\Support\Carbon;
+use Filament\Resources\Resource;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\CategoryResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\CategoryResource\RelationManagers;
 
 class CategoryResource extends Resource
 {
@@ -34,19 +37,35 @@ class CategoryResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+        ->defaultSort('posts_count','desc')
             ->columns([
-                Tables\Columns\TextColumn::make('title')
-              
+                ImageColumn::make('thumbnail')
+                    ->label('Miniaturka')
+                    ->circular(),
+                TextColumn::make('title')
+                    ->label('Tytuł')
+                    ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('posts_count')
+                    ->label('Liczba postów')
+                    ->counts('posts')
+                    ->sortable(),
+
+                TextColumn::make('created_at')
+                    ->label('Data utworzenia')
                     ->dateTime()
                     ->sortable()
+                    ->formatStateUsing(function ($state) {
+                        return $state->format('d-m-Y');
+                    })
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
+                    ->label('Data modyfikacji')
                     ->dateTime()
                     ->sortable()
+                    ->formatStateUsing(function ($state) {
+                        return $state->format('d-m-Y');
+                    })
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
@@ -54,6 +73,7 @@ class CategoryResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -62,7 +82,7 @@ class CategoryResource extends Resource
             ]);
     }
 
-    
+
 
     public static function getPages(): array
     {
@@ -86,6 +106,5 @@ class CategoryResource extends Resource
     public static function getLabel(): ?string
     {
         return ('Kategoria');
-
     }
 }

@@ -2,16 +2,23 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PostResource\Pages;
-use App\Filament\Resources\PostResource\RelationManagers;
-use App\Models\Post;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Models\Post;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
+use Filament\Resources\Resource;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\PostResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\PostResource\RelationManagers;
+use IbrahimBougaoua\FilamentRatingStar\Columns\RatingStarColumn;
+
 
 class PostResource extends Resource
 {
@@ -24,33 +31,84 @@ class PostResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
-                Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('rating')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\IconColumn::make('featured')
+                ImageColumn::make('thumbnail')
+                    ->label('Miniaturka')
+                    ->circular(),
+                TextColumn::make('title')
+                    ->label('Tytuł')
+                    ->url(fn ($record) => url($record->slug))
+                    ->description(fn (Post $record) => Str::limit(strip_tags($record->content), 40))
+                    ->sortable()
+                    ->searchable()
+                    ->openUrlInNewTab(),
+                IconColumn::make('featured')
+                    ->label('Polecany')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('published_at')
+                TextColumn::make('published_at')
+                    ->label('Data publikacji')
                     ->dateTime()
+                    ->badge()
+                    ->formatStateUsing(function ($state) {
+                        return $state->format('d-m-Y | H:i');
+                    })
+                    ->color(function ($state) {
+                        if ($state <= Carbon::now()) {
+                            return 'success';
+                        } else {
+                            return 'danger';
+                        }
+                    })
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                RatingStarColumn::make('rating')
+                    ->label('Ocena')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                ImageColumn::make('categories.thumbnail')
+                    ->label('Kategorie')
+                    ->circular()
+                    ->stacked()
+                    ->limit(3)
+                    ->limitedRemainingText(),
+                ImageColumn::make('tag.thumbnail')
+                    ->label('Tagi')
+                    ->circular()
+                    ->stacked()
+                    ->limit(3)
+                    ->limitedRemainingText(),
+
+
+
+                TextColumn::make('created_at')
+                    ->label('Data utworzenia')
                     ->dateTime()
                     ->sortable()
+                    ->formatStateUsing(function ($state) {
+                        return $state->format('d-m-Y');
+                    })
                     ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')
+                    ->label('Data modyfikacji')
+                    ->dateTime()
+                    ->sortable()
+                    ->formatStateUsing(function ($state) {
+                        return $state->format('d-m-Y');
+                    })
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+
+
+
+
+
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -82,6 +140,5 @@ class PostResource extends Resource
     public static function getLabel(): ?string
     {
         return ('Post');
-
     }
 }
