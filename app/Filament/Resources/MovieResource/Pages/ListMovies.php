@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\MovieResource\Pages;
 
 use App\Filament\Resources\MovieResource;
+use App\Filament\Resources\MovieResource\Widgets\MovieStatsOverview;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
@@ -14,6 +15,12 @@ class ListMovies extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+        ];
+    }
+
+    protected function getHeaderWidgets(): array{
+        return [
+            MovieStatsOverview::class,
         ];
     }
 }

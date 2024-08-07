@@ -5,6 +5,7 @@ namespace App\Filament\Resources\PostResource\Pages;
 
 use Filament\Actions;
 use App\Filament\Resources\PostResource;
+use App\Filament\Resources\PostResource\Widgets\PostStatsOverview;
 use Filament\Resources\Pages\ListRecords;
 
 class ListPosts extends ListRecords
@@ -19,6 +20,10 @@ class ListPosts extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
-
+protected function getHeaderWidgets(): array{
+        return [
+            PostStatsOverview::class,
+        ];
+    }
    
 }

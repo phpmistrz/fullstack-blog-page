@@ -6,7 +6,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "codeat3/blade-forkawesome": "^1.10",
         "filament/filament": "^3.2",
+        "filament/widgets": "^3.2",
         "ibrahimbougaoua/filament-rating-star": "^1.0",
         "joshembling/image-optimizer": "^1.4",
         "laravel/framework": "^11.9",

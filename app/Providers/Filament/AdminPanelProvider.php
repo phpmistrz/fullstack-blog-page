@@ -2,12 +2,18 @@
 
 namespace App\Providers\Filament;
 
+use App\Models\Tag;
 use Filament\Pages;
 use Filament\Panel;
+use App\Models\Post;
 use Filament\Widgets;
+use App\Models\Category;
 use Filament\PanelProvider;
+use App\Models\CompletedGame;
 use Filament\Support\Colors\Color;
 use Illuminate\Support\Facades\Blade;
+use Filament\Navigation\NavigationItem;
+use Filament\Navigation\NavigationGroup;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Session\Middleware\StartSession;
@@ -17,10 +23,12 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\NavigationGroup;
-use Filament\Navigation\NavigationItem;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use App\Filament\Resources\TagResource\Widgets\TagStatsOverview;
+use App\Filament\Resources\PostResource\Widgets\PostStatsOverview;
+use App\Filament\Resources\CategoryResource\Widgets\CategoryStatsOverview;
+use App\Filament\Resources\CompletedGameResource\Widgets\CompletedGameStatsOverview;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -32,7 +40,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->passwordReset()
-            // ->unsavedChangesAlerts()
+            ->unsavedChangesAlerts()
             ->sidebarCollapsibleOnDesktop()
             ->favicon('/favicon/favicon.ico')
             ->brandLogo('/assets/logo.webp')
@@ -48,7 +56,11 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-               
+               PostStatsOverview::class,
+               CompletedGameStatsOverview::class,
+               CategoryStatsOverview::class,
+               TagStatsOverview::class,
+
             ])
             ->navigationGroups([
                 NavigationGroup::make()

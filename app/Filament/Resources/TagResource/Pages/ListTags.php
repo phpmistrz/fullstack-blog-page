@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources\TagResource\Pages;
 
-use App\Filament\Resources\TagResource;
 use Filament\Actions;
+use App\Filament\Resources\TagResource;
 use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\CategoryResource\Widgets\CategoryStatsOverview;
+use App\Filament\Resources\TagResource\Widgets\TagStatsOverview;
 
 class ListTags extends ListRecords
 {
@@ -14,6 +16,12 @@ class ListTags extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+        ];
+    }
+
+    protected function getHeaderWidgets(): array{
+        return [
+            TagStatsOverview::class,
         ];
     }
 }

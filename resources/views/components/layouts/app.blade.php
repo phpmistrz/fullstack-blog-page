@@ -12,10 +12,11 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-primary-800 font-text text-fontPrimary overflow-x-hidden">
+<body class="p-3 bg-primary-800 font-text text-fontPrimary overflow-x-hidden">
+
+<x-shared.nav.navbar />
 
     {{ $slot }}
-
 </body>
 
 </html>
